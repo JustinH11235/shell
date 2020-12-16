@@ -1767,6 +1767,9 @@ export class Ext extends Ecs.System<ExtEvent> {
 
             return true
         }
+
+        func();
+
         return false
     }
 

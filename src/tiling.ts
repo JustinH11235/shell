@@ -42,6 +42,13 @@ export class Tiler {
     private swap_window: Entity | null = null;
 
     constructor(ext: Ext) {
+        const wait = (func: () => void) => () => {
+            ext.schedule_idle(() => {
+                func()
+                return false
+            })
+        }
+        
         this.keybindings = {
             "management-orientation": () => {
                 if (ext.auto_tiler && this.window) {
@@ -52,18 +59,18 @@ export class Tiler {
                 }
             },
 
-            "tile-move-left": () => this.move_left(ext),
-            "tile-move-down": () => this.move_down(ext),
-            "tile-move-up": () => this.move_up(ext),
-            "tile-move-right": () => this.move_right(ext),
-            "tile-resize-left": () => this.resize(ext, Direction.Left),
-            "tile-resize-down": () => this.resize(ext, Direction.Down),
-            "tile-resize-up": () => this.resize(ext, Direction.Up),
-            "tile-resize-right": () => this.resize(ext, Direction.Right),
-            "tile-swap-left": () => this.swap_left(ext),
-            "tile-swap-down": () => this.swap_down(ext),
-            "tile-swap-up": () => this.swap_up(ext),
-            "tile-swap-right": () => this.swap_right(ext),
+            "tile-move-left": wait(() => this.move_left(ext)),
+            "tile-move-down": wait(() => this.move_down(ext)),
+            "tile-move-up": wait(() => this.move_up(ext)),
+            "tile-move-right": wait(() => this.move_right(ext)),
+            "tile-resize-left": wait(() => this.resize(ext, Direction.Left)),
+            "tile-resize-down": wait(() => this.resize(ext, Direction.Down)),
+            "tile-resize-up": wait(() => this.resize(ext, Direction.Up)),
+            "tile-resize-right": wait(() => this.resize(ext, Direction.Right)),
+            "tile-swap-left": wait(() => this.swap_left(ext)),
+            "tile-swap-down": wait(() => this.swap_down(ext)),
+            "tile-swap-up": wait(() => this.swap_up(ext)),
+            "tile-swap-right": wait(() => this.swap_right(ext)),
             "tile-accept": () => this.accept(ext),
             "tile-reject": () => this.exit(ext),
             "toggle-stacking": () => {
